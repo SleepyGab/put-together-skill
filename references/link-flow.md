@@ -23,16 +23,14 @@ Link a user's external OpenClaw agent to their existing Put Together account wit
    - optional `allowed_agent_id`
 4. The app shows the code to the user.
 5. The user tells their OpenClaw agent to link using that code.
-6. The skill calls `POST /v1/link/exchange` with:
-   - `code`
-   - `agent.id`
-   - `agent.name`
-   - `agent.platform = openclaw`
+6. The skill calls `POST /v1/link/redeem` with:
+   - `redeemCode`
+   - `openClawAgentId`
+   - optional OpenClaw/Telegram identity fields
 7. The bridge validates the code, binds the agent, invalidates the code, and returns:
-   - `access_token`
-   - `refresh_token`
-   - `expires_in`
-   - `linked_user` summary
+   - `accessToken`
+   - `expiresAt`
+   - `scopes`
 8. The skill stores the session locally and uses the access token for later recommendation calls.
 
 ## Why Code Exchange Instead Of Direct Login

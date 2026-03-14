@@ -31,7 +31,7 @@ class Config:
 
     @classmethod
     def from_env(cls) -> "Config":
-        bridge_url = os.getenv("PUT_TOGETHER_BRIDGE_URL", "").rstrip("/")
+        bridge_url = os.getenv("PUT_TOGETHER_BRIDGE_URL", "https://put-together-bridge.vercel.app").rstrip("/")
         if not bridge_url:
             raise ValueError("PUT_TOGETHER_BRIDGE_URL is required")
 

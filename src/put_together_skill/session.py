@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -21,16 +21,18 @@ class Session:
 
     @classmethod
     def from_response(cls, payload: dict[str, Any]) -> "Session":
-        expires_in = payload.get("expires_in")
-        expires_at = None
-        if isinstance(expires_in, int):
-            expires_at = (utc_now() + timedelta(seconds=expires_in)).isoformat()
+        access_token = payload.get("access_token") or payload.get("accessToken")
+        refresh_token = payload.get("refresh_token") or payload.get("refreshToken") or ""
+        expires_at = payload.get("expires_at") or payload.get("expiresAt")
+
+        if not access_token:
+            raise KeyError("accessToken")
 
         return cls(
-            access_token=payload["access_token"],
-            refresh_token=payload["refresh_token"],
+            access_token=access_token,
+            refresh_token=refresh_token,
             expires_at=expires_at,
-            linked_user=payload.get("linked_user"),
+            linked_user=payload.get("linked_user") or payload.get("linkedUser"),
             agent=payload.get("agent"),
         )
 

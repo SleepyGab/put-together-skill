@@ -58,26 +58,18 @@ class BridgeClient:
 
     def link_exchange(self, code: str) -> Session:
         payload = {
-            "code": code,
-            "agent": {
-                "id": self.config.agent_id,
-                "name": self.config.agent_name,
-                "platform": "openclaw",
-            },
+            "redeemCode": code,
+            "openClawAgentId": self.config.agent_id,
+            "openClawUserRef": self.config.agent_name,
         }
-        response = self._request("POST", "/v1/link/exchange", payload=payload)
+        response = self._request("POST", "/v1/link/redeem", payload=payload)
         return Session.from_response(response)
 
     def refresh_session(self, refresh_token: str) -> Session:
-        response = self._request(
-            "POST",
-            "/v1/session/refresh",
-            payload={"refresh_token": refresh_token},
-        )
-        return Session.from_response(response)
+        raise BridgeError("Bridge refresh is not implemented yet. Please relink from the Put Together app.")
 
     def session_status(self, access_token: str) -> dict[str, Any]:
-        return self._request("GET", "/v1/session", access_token=access_token)
+        return self._request("GET", "/v1/me", access_token=access_token)
 
     def recommendation(self, path: str, payload: dict[str, Any], access_token: str) -> dict[str, Any]:
         return self._request("POST", path, payload=payload, access_token=access_token)

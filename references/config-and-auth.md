@@ -4,7 +4,8 @@
 
 - `PUT_TOGETHER_BRIDGE_URL`
   - Base URL for the standalone bridge service
-  - Example: `https://bridge.puttogether.example`
+  - Defaults to `https://put-together-bridge.vercel.app`
+  - Override only if you are testing against a non-production bridge
 
 ## Recommended Environment Variables
 

@@ -105,18 +105,18 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "ootd":
             payload = _load_json(args.input)
-            _print(client.recommendation("/v1/recommendations/ootd", payload, session.access_token))
+            _print(client.recommendation("/v1/daily-ootd", payload, session.access_token))
             return 0
 
         if args.command == "style-qa":
             payload = _load_json(args.input)
             payload["question"] = args.question
-            _print(client.recommendation("/v1/recommendations/style-qa", payload, session.access_token))
+            _print(client.recommendation("/v1/style-qna", payload, session.access_token))
             return 0
 
         if args.command == "occasion":
             payload = _load_json(args.input)
-            _print(client.recommendation("/v1/recommendations/occasion", payload, session.access_token))
+            _print(client.recommendation("/v1/recommend/context", payload, session.access_token))
             return 0
     except BridgeError as exc:
         sys.stderr.write(f"{exc}\n")
