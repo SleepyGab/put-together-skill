@@ -1,0 +1,267 @@
+openapi: 3.1.0
+info:
+  title: Put Together Bridge API
+  version: 1.0.0
+  description: Public bridge surface for OpenClaw and other external connectors.
+servers:
+  - url: https://bridge.puttogether.example
+paths:
+  /v1/link/codes:
+    post:
+      summary: Mint a one-time link code for an authenticated Put Together user
+      description: Intended for iOS app or trusted backend usage.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                allowed_agent_id:
+                  type:
+                    - string
+                    - "null"
+      responses:
+        "201":
+          description: Link code minted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LinkCodeIssued"
+  /v1/link/exchange:
+    post:
+      summary: Exchange a one-time link code for bridge session tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LinkExchangeRequest"
+      responses:
+        "200":
+          description: Agent linked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /v1/session:
+    get:
+      summary: Inspect current linked session
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionStatus"
+    delete:
+      summary: Revoke current linked session
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Session revoked
+  /v1/session/refresh:
+    post:
+      summary: Refresh an access token using a refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: Refreshed session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /v1/recommendations/ootd:
+    post:
+      summary: Request OOTD recommendations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Ranked OOTD recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationResponse"
+  /v1/recommendations/style-qa:
+    post:
+      summary: Ask a style question
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question
+              properties:
+                question:
+                  type: string
+      responses:
+        "200":
+          description: Style answer with optional recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationResponse"
+  /v1/recommendations/occasion:
+    post:
+      summary: Request occasion-based recommendations
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Occasion recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Agent:
+      type: object
+      required:
+        - id
+        - platform
+      properties:
+        id:
+          type: string
+        name:
+          type:
+            - string
+            - "null"
+        platform:
+          type: string
+          enum: [openclaw]
+    LinkedUser:
+      type: object
+      required:
+        - user_id
+      properties:
+        user_id:
+          type: string
+        display_name:
+          type:
+            - string
+            - "null"
+    LinkCodeIssued:
+      type: object
+      required:
+        - code
+        - expires_at
+      properties:
+        code:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+    LinkExchangeRequest:
+      type: object
+      required:
+        - code
+        - agent
+      properties:
+        code:
+          type: string
+        agent:
+          $ref: "#/components/schemas/Agent"
+    SessionResponse:
+      type: object
+      required:
+        - access_token
+        - refresh_token
+        - expires_in
+        - linked_user
+        - agent
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+        linked_user:
+          $ref: "#/components/schemas/LinkedUser"
+        agent:
+          $ref: "#/components/schemas/Agent"
+    SessionStatus:
+      type: object
+      required:
+        - linked
+      properties:
+        linked:
+          type: boolean
+        linked_user:
+          $ref: "#/components/schemas/LinkedUser"
+        agent:
+          $ref: "#/components/schemas/Agent"
+        expires_at:
+          type:
+            - string
+            - "null"
+          format: date-time
+    Recommendation:
+      type: object
+      required:
+        - look_id
+        - title
+      properties:
+        look_id:
+          type: string
+        title:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+        why:
+          type:
+            - string
+            - "null"
+    RecommendationResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        answer:
+          type:
+            - string
+            - "null"
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recommendation"
