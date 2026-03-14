@@ -42,9 +42,10 @@ Non-responsibilities:
 
 1. User installs the `put-together` skill into an OpenClaw skill directory.
 2. User signs into the existing Put Together iOS app.
-3. The app requests a short-lived one-time link code from Put Together backend or bridge.
-4. User gives that code to their OpenClaw agent.
-5. The skill exchanges the code with the bridge for user-bound bridge credentials.
+3. The app first guides the user to ask their OpenClaw agent to install the public Put Together skill.
+4. The app then requests a short-lived one-time link code from Put Together backend or bridge.
+5. User gives that code to their OpenClaw agent.
+6. The skill redeems the code with the bridge for user-bound bridge credentials.
 6. The skill stores only bridge session data locally.
 7. Recommendation requests are forwarded to bridge endpoints.
 8. The bridge calls internal Put Together services and returns already-ranked results.

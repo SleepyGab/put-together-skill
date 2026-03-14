@@ -14,26 +14,26 @@ The SKILL metadata is written so OpenClaw can discover those intent classes.
 
 ## Installation Strategy
 
-OpenClaw on this machine currently exposes skill discovery and inspection commands, not a dedicated `skills install` command. It also points users to `clawhub` for search, install, and sync.
-
 Phase 1 recommendation:
 
-1. Ship this repo as a standalone skill folder named `put-together`.
-2. Install it by syncing or copying the folder into an OpenClaw-managed skill root such as `~/.openclaw/skills/put-together`.
-3. Configure `PUT_TOGETHER_BRIDGE_URL` and agent identity in the OpenClaw runtime environment.
+1. Ship this repo as a standalone public skill folder named `put-together`.
+2. Install it by cloning or syncing the repo into an OpenClaw-managed skill root such as `~/.openclaw/skills/put-together`.
+3. Use the default production bridge URL unless you are deliberately testing against a staging bridge.
 4. Verify with:
    ```bash
    openclaw skills info put-together --json
    openclaw skills check
    ```
 
+Public repo:
+- `https://github.com/SleepyGab/put-together-skill`
+
 ## Distribution Options
 
-### Option A: Git-based internal distribution
+### Option A: Public Git-based distribution
 
-- Keep this repo private
-- Install by cloning into the managed OpenClaw skill directory
-- Best for early internal testing
+- Install from the public GitHub repo
+- Best for current testing because bridge URL now defaults to production
 
 ### Option B: Clawhub-managed distribution
 

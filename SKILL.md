@@ -23,17 +23,14 @@ This skill is an installable OpenClaw package for Put Together. It is intentiona
 
 ## Quick Workflow
 
-1. Confirm bridge configuration exists:
-   ```bash
-   test -n "$PUT_TOGETHER_BRIDGE_URL"
-   ```
+1. Use the default production bridge configuration (no env required for normal use).
 2. Check session status:
    ```bash
    python3 scripts/put_together.py status
    ```
-3. If unlinked, exchange the code shown by the iOS app:
+3. If unlinked, redeem the code shown by the iOS app:
    ```bash
-   python3 scripts/put_together.py link --code PT-ABCD1234
+   python3 scripts/put_together.py link --code PTB-123456
    ```
 4. For recommendations, send the request to the bridge:
    ```bash
