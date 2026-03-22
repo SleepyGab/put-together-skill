@@ -127,24 +127,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RecommendationResponse"
-  /v1/recommendations/occasion:
-    post:
-      summary: Request occasion-based recommendations
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-      responses:
-        "200":
-          description: Occasion recommendations
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RecommendationResponse"
 components:
   securitySchemes:
     bearerAuth:
