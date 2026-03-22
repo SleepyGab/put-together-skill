@@ -1,6 +1,6 @@
 ---
 name: put-together
-description: Thin OpenClaw connector for Put Together outfit recommendations. Use when linking a user's Put Together account to their OpenClaw agent, getting OOTD recommendations, answering style Q&A, or suggesting occasion-based outfits. Always call the Put Together Bridge service for recommendations; never compute proprietary recommendation logic locally.
+description: Thin OpenClaw connector for Put Together outfit recommendations. Use when linking a user's Put Together account to their OpenClaw agent, getting OOTD recommendations, or answering style Q&A. Always call the Put Together Bridge service for recommendations; never compute proprietary recommendation logic locally.
 ---
 
 # Put Together Skill
@@ -12,8 +12,6 @@ This skill is an installable OpenClaw package for Put Together. It is intentiona
 - Linking an OpenClaw agent to a user's existing Put Together account with a one-time code
 - Fetching OOTD recommendations
 - Asking style questions grounded in Put Together profile and wardrobe data
-- Recommending outfits for an occasion, dress code, weather, or vibe
-
 ## Hard Rules
 
 - Treat the bridge as the only network dependency for Phase 1.
@@ -36,7 +34,6 @@ This skill is an installable OpenClaw package for Put Together. It is intentiona
    ```bash
    python3 scripts/put_together.py ootd --input '{"weather":{"summary":"65F and sunny"},"context":{"day_type":"workday"}}'
    python3 scripts/put_together.py style-qa --question "Can I wear white sneakers with these trousers?" --input '{"context":{"occasion":"smart casual dinner"}}'
-   python3 scripts/put_together.py occasion --input '{"occasion":{"type":"wedding","dress_code":"cocktail"}}'
    ```
 5. Get avatar URL:
    ```bash
@@ -53,7 +50,6 @@ This skill is an installable OpenClaw package for Put Together. It is intentiona
 - `status`: verify whether the current agent is linked (includes link health check)
 - `ootd`: request daily outfit recommendations (includes avatarUrl in output if available)
 - `style-qa`: ask a style question; optional supplemental context can be included in `--input`
-- `occasion`: request an occasion-specific outfit recommendation
 - `avatar`: get the latest avatar URL for the linked user (--type: today, reveal, style, profile)
 - `unlink`: revoke the current bridge link and clear session
 
