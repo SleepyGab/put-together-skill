@@ -74,3 +74,8 @@ class Session:
             return datetime.fromisoformat(self.expires_at) <= utc_now()
         except ValueError:
             return False
+
+    def clear(self, path: Path) -> None:
+        """Remove the session file."""
+        if path.exists():
+            path.unlink()

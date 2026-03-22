@@ -74,6 +74,11 @@ def build_parser() -> argparse.ArgumentParser:
     occasion = subparsers.add_parser("occasion", help="Request an occasion-based recommendation")
     occasion.add_argument("--input", required=True, help="JSON object with occasion request context")
 
+    avatar = subparsers.add_parser("avatar", help="Get the latest avatar URL")
+    avatar.add_argument("--type", default="today", help="Avatar type (default: today)")
+
+    subparsers.add_parser("unlink", help="Revoke the current bridge link")
+
     return parser
 
 
@@ -100,12 +105,17 @@ def main(argv: list[str] | None = None) -> int:
         session = _require_session(config, client)
 
         if args.command == "status":
-            _print(client.session_status(session.access_token))
+            status = client.session_status(session.access_token)
+            link_status = client.link_status(session.access_token)
+            _print({"me": status, "link": link_status})
             return 0
 
         if args.command == "ootd":
             payload = _load_json(args.input)
-            _print(client.recommendation("/v1/daily-ootd", payload, session.access_token))
+            result = client.recommendation("/v1/daily-ootd", payload, session.access_token)
+            if result.get("avatarUrl"):
+                sys.stdout.write(f"\nAvatar URL: {result['avatarUrl']}\n\n")
+            _print(result)
             return 0
 
         if args.command == "style-qa":
@@ -117,6 +127,18 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "occasion":
             payload = _load_json(args.input)
             _print(client.recommendation("/v1/recommend/context", payload, session.access_token))
+            return 0
+
+        if args.command == "avatar":
+            avatar_data = client.get_avatar(session.access_token, args.type)
+            _print(avatar_data)
+            return 0
+
+        if args.command == "unlink":
+            result = client.unlink(session.access_token)
+            _print(result)
+            session.clear(config.session_path)
+            sys.stdout.write("\nUnlinked successfully. Session cleared.\n")
             return 0
     except BridgeError as exc:
         sys.stderr.write(f"{exc}\n")

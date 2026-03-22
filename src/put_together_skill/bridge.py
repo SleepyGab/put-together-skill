@@ -71,5 +71,14 @@ class BridgeClient:
     def session_status(self, access_token: str) -> dict[str, Any]:
         return self._request("GET", "/v1/me", access_token=access_token)
 
+    def link_status(self, access_token: str) -> dict[str, Any]:
+        return self._request("GET", "/v1/link/status", access_token=access_token)
+
     def recommendation(self, path: str, payload: dict[str, Any], access_token: str) -> dict[str, Any]:
         return self._request("POST", path, payload=payload, access_token=access_token)
+
+    def get_avatar(self, access_token: str, avatar_type: str = "today") -> dict[str, Any]:
+        return self._request("GET", f"/v1/avatar?type={avatar_type}", access_token=access_token)
+
+    def unlink(self, access_token: str) -> dict[str, Any]:
+        return self._request("DELETE", "/v1/link", access_token=access_token)
